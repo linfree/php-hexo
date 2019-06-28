@@ -1,0 +1,4 @@
+.idea
+old_code\
+composer.*
+!vendor\composer.*

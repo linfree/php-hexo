@@ -1,0 +1,36 @@
+
+#login {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -150px 0 0 -150px;
+    width: 300px;
+    height: 300px;
+}
+
+input {
+    color: #535b5f;
+    width: 278px;
+    height: 18px;
+    margin-bottom: 10px;
+    outline: none;
+    padding: 10px;
+    font-size: 13px;
+    border: 1px solid #bbbbbb;
+    border-radius: 4px;
+    background-color: #dddddd;
+}
+
+.but {
+    width: 300px;
+    min-height: 20px;
+    display: block;
+    background-color: #f2645f;
+    border: 1px solid #ff555f;
+    color: #fff;
+    padding: 9px 14px;
+    font-size: 15px;
+    line-height: normal;
+    border-radius: 5px;
+    margin: 0;
+}

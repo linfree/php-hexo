@@ -1,0 +1,47 @@
+.heart {
+    -webkit-animation: heartbeat 1s infinite;
+    -webkit-animation: heartbeat 1s infinite;
+    /* Safari 和 Chrome */
+    width: 14px;
+    height: 14px;
+    background: #f00;
+    position: relative;
+
+    -webkit-transform: rotate(45deg);
+    left: 15px;
+    top: 11px;
+}
+
+.heart:before,
+.heart:after {
+    content: "";
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    background: #f00;
+    border-radius: 7px;
+}
+
+.heart:before {
+    left: -7px;
+}
+
+.heart:after {
+    left: 0;
+    top: -7px;
+}
+
+@-webkit-keyframes heartbeat {
+    0% {
+        -webkit-transform: rotate(45deg) scale(0.8, 0.8);
+        opacity: 1;
+    }
+    25% {
+        -webkit-transform: rotate(45deg) scale(1, 1);
+        opacity: 0.8;
+    }
+    100% {
+        -webkit-transform: rotate(45deg) scale(0.8, 0.8);
+        opacity: 1;
+    }
+}
