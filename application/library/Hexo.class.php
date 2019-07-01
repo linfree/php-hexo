@@ -144,17 +144,17 @@ class Hexo
         }
     }
 
-    public function lists($type='post')
+    public function lists($type = 'post')
     {
-        $cmd = $this->hexo_exe . ' --cwd ' . BLOG_DIR . ' list ' .$type;
+        $cmd = $this->hexo_exe . ' --cwd ' . BLOG_DIR . ' list ' . $type;
         return $this->exec_cmd($cmd);
     }
 
-        /**
-         * 执行系统命令
-         * @param $command
-         * @return bool
-         */
+    /**
+     * 执行系统命令
+     * @param $command
+     * @return bool
+     */
     public function exec_cmd($command)
     {
         if (!function_exists('exec')) {
@@ -192,6 +192,10 @@ class Hexo
         }
     }
 
+    /**
+     * 删除hexo的server服务
+     * @return string
+     */
     public function kill_server()
     {
         $this->find_server();
@@ -203,26 +207,23 @@ class Hexo
             }
             $this->exec_cmd($cmd);
             $this->pid = '';
+            return true;
         } else {
             return 'pid is null';
         }
     }
 
 
-
+    /**
+     * 读取hexo的缓存文件 /db.json
+     * @return false|string
+     */
     public function read_db()
     {
-        $str = file_get_contents(BLOG_DIR."/db.json");
+        $str = file_get_contents(BLOG_DIR . "/db.json");
         return json_encode($str);
     }
 
 
 }
 
-//$hexo_client = new Hexo();
-//#var_dump($hexo_client->server());
-//#sleep(10);
-//$pid = $hexo_client->find_server();
-//var_dump($pid);
-//$hexo_client->kill_server();
-//#$hexo_client->deploy();
