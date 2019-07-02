@@ -24,9 +24,6 @@ class Blog
     private static $file_dirs = array('post' => '_posts', 'draft' => '_drafts', 'recycle' => '_recycle');
 
 
-
-
-
     public function __construct($filename, $new = false)
     {
 
