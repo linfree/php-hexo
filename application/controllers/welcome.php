@@ -14,9 +14,13 @@ class Welcome extends MpController
          $hexo = new Hexo();
          var_dump($hexo->read_db()['models']['Post']);*/
 
-        var_dump(HConfig::get("title"));
-        var_dump(FileManage::get_file_list(BLOG_DIR.'/source/_posts/'));
-        var_dump(FileManage::check_file_exists("D:\hexo_dir/source/_posts/《楚门的世界》，关于选择和自由.md"));
+        //var_dump(HConfig::get("title"));
+        //var_dump(FileManage::get_file_list(BLOG_DIR . '/source/_posts/'));
+        //var_dump(FileManage::check_file_exists("D:\hexo_dir/source/_posts/《楚门的世界》，关于选择和自由.md"));
+
+        //var_dump(ParseBlog::parse('你好啊小猪page.md', 'draft'));
+
+
 
     }
 }

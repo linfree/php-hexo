@@ -20,22 +20,27 @@ class FileManage
         //获取某目录下所有文件、目录名（不包括子目录下文件、目录名）
         if (self::check_file_exists($dir)) {
             $files = [];
-            $handler = opendir($dir);
-            while (($filename = readdir($handler)) !== false) {//务必使用!==，防止目录下出现类似文件名“0”等情况
-                if ($filename != "." && $filename != "..") {
-                    $type = mb_detect_encoding($filename, array("ASCII", "UTF-8", "GB2312", "GBK", "BIG5", 'EUC-CN'));
 
-                    if ($type == 'EUC-CN' or $type == 'GB2312' or $type == 'GBK') {
-                        $filename = iconv("GBK", "UTF-8", $filename);
+
+            $dir = mb_convert_encoding($dir, "GBK", "utf-8");
+            $files1 = scandir($dir);
+            foreach ($files1 as $filename) {
+                if (!is_dir($filename) && strpos($filename, ".") != false) {
+
+                    /*$type = mb_detect_encoding($filename, array("ASCII", "UTF-8", "GB2312", "GBK", "BIG5", 'EUC-CN'));
+                    if ($type == 'EUC-CN' or $type == 'GB2312' or $type == 'GBK') {*/
+
+
+                    /**
+                     * mb_detect_encoding 不准确，不能依赖这个
+                     * 感谢大佬【海鳗】的指点
+                     */
+                    if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+                        $filename = mb_convert_encoding($filename, "UTF-8", "GBK");
                     }
-                    if (substr($dir, -1) == '/' or substr($dir, -1) == '\\') {
-                        $files[] = $dir . $filename;
-                    } else {
-                        $files[] = $dir . '/' . $filename;
-                    }
+                    $files[] = $filename;
                 }
             }
-            closedir($handler);
             return $files;
         } else {
             return [];
@@ -51,6 +56,10 @@ class FileManage
     public static function get_content($filename = '')
     {
         if (self::check_file_exists($filename)) {
+            $type = mb_detect_encoding($filename, array("ASCII", "UTF-8", "GB2312", "GBK", "BIG5"));
+            if ($type == 'UTF-8') {
+                $filename = iconv("UTF-8", "GBK", $filename);
+            }
             $content = file_get_contents($filename);
             return $content;
         } else {
@@ -65,9 +74,16 @@ class FileManage
      * @param $content
      * @return bool|int
      */
-    public static function write_content($filename, $content)
+    public static function write_content($filename, $content, $isnew = false)
     {
-        if (self::check_file_exists($filename)) {
+
+        var_dump($filename);
+        if (self::check_file_exists($filename) or $isnew) {
+
+            $type = mb_detect_encoding($filename, array("ASCII", "UTF-8", "GB2312", "GBK", "BIG5"));
+            if ($type == 'UTF-8') {
+                $filename = iconv("UTF-8", "GBK", $filename);
+            }
             $result = file_put_contents($filename, $content);
             return $result;
         } else {
@@ -82,16 +98,16 @@ class FileManage
      * @param int $line
      * @return bool|string
      */
-    public static function get_head($filename, $line = 1)
-    {
-        $myfile = fopen($filename, "r") or die("Unable to open file!");
-        $i = 1;
-        while (!feof($myfile) && $i <= $line) {
-            $content = fgets($myfile);
-        };
-        fclose($myfile);
-        return $content;
-    }
+    /*public static function get_head($filename, $line = 1)
+        {
+            $myfile = fopen($filename, "r") or die("Unable to open file!");
+            $i = 1;
+            while (!feof($myfile) && $i <= $line) {
+                $content = fgets($myfile);
+            };
+            fclose($myfile);
+            return $content;
+        }*/
 
     /**
      * 判断文件是否存在
@@ -100,11 +116,17 @@ class FileManage
      */
     public static function check_file_exists($filename)
     {
-        $type = mb_detect_encoding($filename, array("ASCII", "UTF-8", "GB2312", "GBK", "BIG5"));
         if ($filename == '') {
             return false;
         }
-        if ($type == 'UTF-8') {
+        $en_type = mb_detect_encoding($filename, array("ASCII", "UTF-8", "GB2312", "GBK", "BIG5"));
+
+
+        var_dump('FileManage::check_file_exists()');
+        var_dump($en_type);
+        var_dump($filename);
+
+        if ($en_type == 'UTF-8') {
             $filename = iconv("UTF-8", "GBK", $filename);
         }
         return file_exists($filename);
@@ -116,20 +138,49 @@ class FileManage
         return dirname($filename);
     }
 
+
     /**
-     * 移动文件的目录
-     * @param $filename | 原始文件名，带地址
-     * @param $dir |新的目录的名称
+     * 功能: 移动文件
+     * @param $file -- 待移动的文件名
+     * @param $destfile -- 目标文件名
+     * @param int $overwrite 如果目标文件存在，是否覆盖.默认是覆盖.
+     * @param int $bak 是否保留原文件 默认是不保留即删除原文件
      * @return bool
      */
-    public static function mv_file($filename, $dir)
+    public static function mv_file($file, $destfile, $overwrite = 1, $bak = 0)
     {
-        $old_name = $filename;
-        $base_name = basename($old_name);
-        $new_name = $dir . $base_name;
-        return rename($old_name, $new_name);
+        $file = str_replace('\\', '/', $file);
+        $destfile = str_replace('\\', '/', $destfile);
+
+        $type = mb_detect_encoding($file, array("ASCII", "UTF-8", "GB2312", "GBK", "BIG5"));
+        if ($type == 'UTF-8') {
+            $file = iconv("UTF-8", "GBK", $file);
+        }
+
+        $type = mb_detect_encoding($destfile, array("ASCII", "UTF-8", "GB2312", "GBK", "BIG5"));
+        if ($type == 'UTF-8') {
+            $destfile = iconv("UTF-8", "GBK", $destfile);
+        }
+
+        if (file_exists($destfile)) {
+            if ($overwrite)
+                unlink($destfile);
+            else
+                return false;
+        }
+        if ($cf = copy($file, $destfile)) {
+            if (!$bak)
+                return (unlink($file));
+        }
+        return ($cf);
     }
 
+
+    /**
+     * 获取文件修改时间
+     * @param $filename
+     * @return bool|false|string
+     */
     public static function get_modtime($filename)
     {
         if (self::check_file_exists($filename)) {

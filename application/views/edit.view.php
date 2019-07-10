@@ -14,7 +14,7 @@ include($this->view_path('public/header_start'));
 
 <!--第一步：引入Javascript / CSS （CDN）-->
 <!-- Markdown Editor CSS -->
-<link rel="stylesheet" href="assets/lib/material-icons.css">
+<link rel="stylesheet" href="assets/lib/material-icons.css" xmlns="http://www.w3.org/1999/html">
 <link rel="stylesheet" href="assets/lib/base16-light.css">
 <link rel="stylesheet" href="assets/codemirror/lib/codemirror.css">
 <link rel="stylesheet" href="assets/lib/default.css">
@@ -26,7 +26,11 @@ include($this->view_path('public/header_start'));
 <!--index.css-->
 <link rel="stylesheet" href="assets/css/edit.css">
 
-
+<script>
+    editUrl = "<?php
+        echo isset($contents['filename']) ? url('#?hexoer.edit', $contents['filename']) : url('#?hexoer.new');
+        ?>";
+</script>
 <?php
 include($this->view_path('public/header_end'));
 ?>
@@ -38,15 +42,19 @@ include($this->view_path('public/header_end'));
     ?>
     <div class="content " style="width: 60%">
         <div class="title-2 m-b-md">
-            新建文章
+            <?php echo $title; ?>
         </div>
     </div>
 </div>
 
 <div id="toplevel">
-    <form>
+    <form id="frm" class="layui-form" action="" lay-filter="example">
         <div id="in">
-            <textarea id="code"># New Document</textarea>
+            <textarea id="code" name="content">
+                <?php
+                echo isset($contents['content']) ? $contents['content'] : '';
+                ?>
+            </textarea>
         </div>
         <div id="out" class="markdown-body"></div>
         <div id="menu">
@@ -72,8 +80,21 @@ include($this->view_path('public/header_end'));
         <div id="navbar">
             <div id="navcontent">
                 <a id="logo">
-                    <p id="title" class="left"># Markdown Editor</p>
+                    <p id="title" class="left">
+                        <?php
+                        if (isset($contents['filename'])) {
+                            echo substr($contents['filename'],0,-3);
+                        } else {
+                            echo "<input id='newname' value='' type='text' name='newname' placeholder='请输入标题'  class='layui-input'>";
+                        }
+                        ?>
+                    </p>
+                    <input type="hidden" id="oldname" name="oldname"
+                           value="<?php echo isset($contents['filename']) ? substr($contents['filename'],0,-3) : ''; ?>">
                 </a>
+
+                <p id="edittitle" class="navbutton left " style="margin-right: 20px; display: none;"
+                   onclick="editTitle()">确定</p>
                 <p id="openbutton" title="文件上传" class="navbutton left"
                    onclick="document.getElementById('fileInput').click();"><i class="material-icons">open_in_browser</i>
                 </p>
@@ -123,12 +144,31 @@ include($this->view_path('public/header_end'));
 
 <!--双击输入框-->
 <script type="text/javascript">
-    $(document).ready(function(){
-        $("#title").dblclick(function(){
-            console.log("123123");
-            $(this).html("<input type='text' value='123'>");
+
+
+    $(document).ready(function () {
+        /**
+         * 双击事件
+         */
+        $("#title").dblclick(function () {
+            var txt = $("#title").text();
+            $(this).html("<input id='newname' value='" + txt + "' type='text' name='newname' placeholder='请输入标题'  class='layui-input'>");
+            $("#edittitle").show();
         });
+
     });
+
+
+    /**
+     * 编辑表头
+     */
+    var editTitle = function () {
+        $("#title").text($('#newname').val());
+        $('#newname').hide();
+        $("#edittitle").hide();
+    }
+
+
 </script>
 
 

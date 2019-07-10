@@ -249,13 +249,46 @@ function saveInBrowser() {
             },
             function () {
                 localStorage.setItem('content', text);
+
+
                 swal("已保存", "文档保存成功.", "success");
             });
     } else {
         localStorage.setItem('content', text);
         swal("已保存", "文档保存成功.", "success");
     }
+    saveInServer()
     console.log("Saved");
+}
+
+
+function saveInServer() {
+
+    var content = editor.getValue();
+    /**
+     * 需要jquery
+     */
+    var oldname = $("#oldname").val();
+    var newname = $("#newname").val() ? $("#newname").val() : $("#title").text();
+    var dataArr = {
+        'content': content,
+        'oldname': oldname,
+        'newname': newname
+    };
+    console.log(dataArr);
+
+
+    $.ajax({
+        url: editUrl,
+        type: 'post',
+        data: dataArr,
+        async: false,
+        success: function (response) {
+            console.log(response);
+            //后台返回的数据。这里给  抓页面元素填上去就OK了
+        }
+    })
+
 }
 
 function toggleNightMode(button) {

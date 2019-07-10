@@ -60,11 +60,37 @@ class Hexoer extends MpController
     /**
      * 新建博客
      */
-    public function doNew($name = '', $type = 'post')
+    public function doNew()
     {
-        $hexo = new Hexo();
-        $hexo->new_blog($name);
+        echo BLOG_DIR . '/' . HConfig::get('source_dir') . '/_posts/' . $_POST['newname'] . '.md';
+
+        FileManage::write_content(BLOG_DIR . '/' . HConfig::get('source_dir') . '/_posts/' . $_POST['newname'] . '.md', $_POST['content'], true);
     }
+
+    /**
+     * 编辑博客
+     */
+    public function doEdit($name, $type = 'post')
+    {
+
+
+        $oldname = trim($_POST['oldname']) . '.md';
+        $newname = trim($_POST['newname']) . '.md';
+        $content = trim($_POST['content']);
+
+        $oldfile = ParseBlog::parse($oldname, $type)['full_dir'];
+
+        if ($oldname !== $newname) {
+            FileManage::mv_file($oldfile, dirname($oldfile) . '/' . $newname);
+        }
+
+        FileManage::write_content(ParseBlog::parse($newname, $type)['full_dir'], $content);
+
+
+        $this->ajax_echo(200, '', $_REQUEST);
+
+    }
+
 
     /**
      * 生成静态文件
@@ -101,16 +127,13 @@ class Hexoer extends MpController
 
         for ($i = 0; $i < count($res); $i++) {
             if ($i > 1) {
-                 $tmp['name']= preg_split('/\s{2,}/', $res[$i])[1];
-                $tmp['status']= preg_split('/\s{2,}/', $res[$i])[2];
-                $res_new[]=$tmp;
+                $tmp['name'] = preg_split('/\s{2,}/', $res[$i])[1];
+                $tmp['status'] = preg_split('/\s{2,}/', $res[$i])[2];
+                $res_new[] = $tmp;
             }
         }
         $this->ajax_echo(0, '', $res_new);
     }
-
-
-
 
 
 }

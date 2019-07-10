@@ -10,11 +10,11 @@ header("Content-type: text/html; charset=utf-8");
 /**
  * hexo执行文件的目录
  **/
-define('HEXO_DIR', 'D:\"Program Files"\nodejs\hexo');
+define('HEXO_DIR', 'D:/"Program Files"/nodejs/hexo');
 /**
  * blog生成的目录
  **/
-define('BLOG_DIR', 'D:\hexo_dir');
+define('BLOG_DIR', 'D:/hexo_dir');
 /**
  * 发布博客的目录
  **/

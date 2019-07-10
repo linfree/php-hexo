@@ -16,13 +16,16 @@ class Home extends MpController
      * 编辑blog
      * @param string $id
      */
-    public function doEdit($name = '')
+    public function doEdit($name = '', $type = 'post')
     {
+
+        if (substr(trim($name), -3) != '.md') {
+            $name = $name . '.md';
+        }
         $data = array(
-            'title' => '新建blog',
-            'name' => $name,
-            'content' => ''
+            'title' => '编辑文章',
         );
+        $data['contents'] = EditBlog::parse($name, $type);
         $this->view('edit', $data);
     }
 
@@ -35,14 +38,6 @@ class Home extends MpController
     {
         $type = $type == 'draft' ? 'draft' : 'post';
 
-        /*$hexo = new Hexo();
-        $lists = $hexo->lists($type);
-
-        for ($i = 0; $i < count($lists); $i++) {
-            if ($i > 1) {
-                $res[] = preg_split('/\s{2,}/', $lists[$i]);
-            }
-        }*/
 
         $src_dir = BLOG_DIR . '/' . HConfig::get('source_dir');
         $post_dir = $src_dir . '/_posts';
@@ -51,14 +46,16 @@ class Home extends MpController
 
         $posts = FileManage::get_file_list($post_dir);
         $drafts = FileManage::get_file_list($draft_dir);
-        $recycles = FileManage::get_file_list($recycle_dir);
+        //$recycles = FileManage::get_file_list($recycle_dir);
+        $res = [];
+
 
         foreach ($posts as $post) {
-            $res[] = array('name' => $post, 'type' => 'post', 'modtime' => FileManage::get_modtime($post));
+            $res[] = ParseBlog::parse($post);
         }
 
         foreach ($drafts as $draft) {
-            $res[] = array('name' => $draft, 'type' => 'draft', 'modtime' => FileManage::get_modtime($draft));
+            $res[] = ParseBlog::parse($draft, 'draft');
         }
 
         /*foreach ($res as $re){

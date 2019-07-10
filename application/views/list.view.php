@@ -7,28 +7,8 @@
  */
 
 include($this->view_path('public/header_start'));
-
 ?>
 
-
-<!-- Styles -->
-<style>
-    .table-div {
-        width: 100%;
-    }
-
-    .list {
-        margin-top: 10px;
-        border: 1px solid #a5a1a0;
-        border-radius: 4px;
-        width: 100%;
-    }
-
-    .dataTables_wrapper .dataTables_filter {
-        margin-bottom: 8px;
-    }
-
-</style>
 <?php
 include($this->view_path('public/header_end'));
 ?>
@@ -50,7 +30,8 @@ include($this->view_path('public/header_end'));
             <thead>
             <tr>
                 <th lay-data="{field:'num', width:60}">编号</th>
-                <th lay-data="{field:'name'}">名称</th>
+                <th lay-data="{field:'name'}">标题</th>
+                <th lay-data="{field:'filename'}">文件名称</th>
                 <th lay-data="{field:'modTime', width:220}">修改时间</th>
                 <th lay-data="{field:'status', width:100}">状态</th>
                 <th lay-data="{field:'operate', width:160}">操作</th>
@@ -63,13 +44,16 @@ include($this->view_path('public/header_end'));
 
                 <tr>
                     <td><?php echo $i++ ?></td>
-                    <td><?php echo $row['name'] ?></td>
-                    <td><?php echo $row['modtime'] ?></td>
-                    <td><?php echo $row['type'] ?></td>
+                    <td><?php echo $row['title']; ?></td>
+                    <td><?php echo $row['filename']; ?></td>
+                    <td><?php echo $row['updated']; ?></td>
+                    <td><?php echo $row['layout']; ?></td>
                     <td>
                         <button type="button" class="layui-btn layui-btn-danger layui-btn-xs">删除</button>
-                        <button type="button" class="layui-btn layui-btn-xs">编辑</button>
-                        <?php if ($row['type'] == 'post') { ?>
+                        <button type="button" class="layui-btn layui-btn-xs"><a
+                                    href="<?php echo url("#?home.edit", $row['filename'], $row['layout']); ?>">编辑</a>
+                        </button>
+                        <?php if ($row['layout'] == 'post') { ?>
                             <button type="button" class="layui-btn layui-btn-normal layui-btn-xs">转草</button>
                         <?php } else { ?>
                             <button type="button" class="layui-btn layui-btn-normal layui-btn-xs">推送</button>
@@ -98,9 +82,7 @@ include($this->view_path('public/header_end'));
                 }
                 //支持所有基础参数
             });
-
-
-        },
+        }
     )
     ;
 
