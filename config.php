@@ -38,3 +38,16 @@ define('HEXO_SERVER_IP', '0.0.0.0');
  **/
 define('HEXO_SERVER_PORT', '4000');
 
+/**
+ * 用户名和密码
+ * 默认密码:phphexo
+ * $2y$10$HHI5ecGoMy7WUBMw62zW2uxUhX2hmvGqR4W0BR25O7VhZi7s8Z6aK
+ * 忘记密码的时候直接将pass，修改成默认值
+ */
+
+define("USER", 'admin');
+
+
+define("PASS", '$2y$10$HHI5ecGoMy7WUBMw62zW2uxUhX2hmvGqR4W0BR25O7VhZi7s8Z6aK');
+
+
