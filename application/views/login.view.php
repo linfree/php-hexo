@@ -21,9 +21,9 @@ include($this->view_path('public/header_end'));
         <div class="title m-b-md">
             Login
         </div>
-        <form method="post">
-            <input type="text" required="required" placeholder="用户名" name="u"></input>
-            <input type="password" required="required" placeholder="密码" name="p"></input>
+        <form method="post" action="<?php echo url("?#login.checkLogin") ?>">
+            <input type="text" required="required" placeholder="用户名" name="user"></input>
+            <input type="password" required="required" placeholder="密码" name="pass"></input>
             <button class="but" type="submit">登录</button>
         </form>
     </div>

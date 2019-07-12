@@ -13,6 +13,6 @@
     <a href="<?php echo url('#?home.index');?>">Home</a>
     <a href="<?php echo url('#?home.new');?>">New</a>
     <a href="<?php echo url('#?home.about');?>">About</a>
-    <a href="<?php echo url('#?login.login');?>">Login out</a>
+    <a href="<?php echo url('#?login.out');?>">Login out</a>
 
 </div>

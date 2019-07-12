@@ -58,21 +58,24 @@
  *
  *      $C->set('sitename', '哒哒哒')->save();
  */
-
-define('CONFIG_EXIT', '<?php exit;?>');
-class Config {
+class Conf
+{
     private $data;
     private $file;
+    //识别define的正则
+    //$re = '/define\([\"\'](.*?)[\"\'],\s*[\"\'](.*?)[\"\']\)/';
+    private $re = '/define\([\"\'](.*?)[\"\'],(.*)\)/';
 
     /**
      * 构造函数
      * @param $file 存储数据文件
      * @return
      */
-    function __construct($file) {
-        $file = $file.'.php';
+    function __construct($file)
+    {
+        $file = $file . '.php';
         $this->file = $file;
-        $this->data= self::read($file);
+        $this->data = $this->read($file);
     }
 
     /**
@@ -80,14 +83,25 @@ class Config {
      * @param $file 要读取的数据文件
      * @return 读取到的全部数据信息
      */
-    public function read($file) {
-        if(!file_exists($file)) return array();
-
+    public function read($file)
+    {
+        if (!file_exists($file)) return array();
 
         $str = file_get_contents($file);
-//        preg_match_all('/define\(\"(.*?)\",\s*\"(.*?)\"\)/',$info,$arr);
-        $str = substr($str, strlen(CONFIG_EXIT));
-        $data = json_decode($str, true);
+
+
+        //替换内容的
+        $rere = '/^[\"\'](.*)[\"\']/m';
+        $subst = '$1';
+
+        preg_match_all($this->re, $str, $arr);
+        $data = array();
+        foreach ($arr[1] as $key => $value) {
+            $str = trim($arr[2][$key]);
+            $result = preg_replace($rere, $subst, $str);
+            $data[$value] = $result;
+        }
+
         if (is_null($data)) return array();
         return $data;
     }
@@ -98,10 +112,11 @@ class Config {
      * @param $default 默认值
      * @return data
      */
-    public function get($key = null, $default = '') {
+    public function get($key = null, $default = '')
+    {
         if (is_null($key)) return $this->data;  // 取全部数据
 
-        if(isset($this->data[$key])) return $this->data[$key];
+        if (isset($this->data[$key])) return $this->data[$key];
         return $default;
     }
 
@@ -111,10 +126,11 @@ class Config {
      * @param $value 值
      * @return null
      */
-    public function set($key, $value) {
-        if(is_string($key)) {   // 更新单条数据
+    public function set($key, $value)
+    {
+        if (is_string($key)) {   // 更新单条数据
             $this->data[$key] = $value;
-        } else if(is_array($key)) {   // 更新多条数据
+        } else if (is_array($key)) {   // 更新多条数据
             foreach ($this->data as $k => $v) {
                 if ($v[$key[0]] == $key[1]) {
                     $this->data[$k][$value[0]] = $value[1];
@@ -130,7 +146,8 @@ class Config {
      * @param $key 删除项名
      * @return null
      */
-    public function delete($key) {
+    public function delete($key)
+    {
         unset($this->data[$key]);
 
         return $this;
@@ -141,21 +158,29 @@ class Config {
      * @param $file 要保存的数据文件
      * @return true-成功 其它-保存失败原因
      */
-    public function save() {
-        if(defined('JSON_PRETTY_PRINT')) {
-            $jsonStr = json_encode($this->data, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
-        } else {
-            $jsonStr = json_encode($this->data);
+    public function save()
+    {
+
+        $info = file_get_contents($this->file);
+
+        foreach ($this->data as $key => $value) {
+            $re = '/define\([\"\']\s*' . $key . '\s*[\"\'],(.*)\)/m';
+
+            if (substr($value, 0) == "\"" || substr($value, 0) == "'" || substr($value, -1) == "\"" || substr($value, -1) == "'") {
+                $subst = "define('{$key}',{$value})";
+            } else {
+                $subst = "define('{$key}','{$value}')";
+            }
+
+            $info = preg_replace($re, $subst, $info);
+
         }
-
-        // 含有二进制或非utf8字符串对应检测
-        if(is_null($jsonStr)) return '数据文件有误';
-        $buffer = CONFIG_EXIT.$jsonStr;
-
-        $file_strm = fopen($this->file, 'w');
-        if(!$file_strm) return '写入文件失败，请赋予 '.$file.' 文件写权限！';
-        fwrite($file_strm, $buffer);
-        fclose($file_strm);
+        var_dump($info);
+        file_put_contents($this->file, $info);
         return true;
     }
 }
+
+
+
+

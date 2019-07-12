@@ -1,7 +1,7 @@
 <?php
 
 
-class Welcome extends MpController
+class Welcome extends AuthController
 {
     public function doIndex()
     {
@@ -19,6 +19,13 @@ class Welcome extends MpController
         //var_dump(FileManage::check_file_exists("D:\hexo_dir/source/_posts/《楚门的世界》，关于选择和自由.md"));
 
         //var_dump(ParseBlog::parse('你好啊小猪page.md', 'draft'));
+
+        $conf = new Conf("./config");
+        var_dump( $conf->get('PASS'));
+
+
+
+        $conf->set("HEXO_DIR","D:/\"Program Files\"/nodejs/hexo")->save();
 
 
 

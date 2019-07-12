@@ -20,22 +20,34 @@ class Login extends MpController
     public function doCheckLogin()
     {
 
-        $user = trim(isset($_POST['username']) ? $_POST['username'] : "");
-        $pass = trim(isset($_POST['pass']) ? $_POST['pass'] : "");
+        $user = $this->input->post('user', '', true);
+        $pass = $this->input->post('pass', '', true);
 
 
+        if ($user != USER) {
+            return $this->ajax_echo(0, 'user error', 'error');
+        }
+
+        print_r($pass);
         $hash = password_hash($pass, PASSWORD_DEFAULT);
-        if (password_verify(PASS, $hash)) {
+        echo $hash;
+        if (password_verify($pass, PASS)) {
 
-            #echo('ok');
-
-            $this->ajax_echo(1, '', 'success');
+            sessionStart();
+            $_SESSION['user'] = 'admin';
+            $_SESSION['is_login'] = true;
+            $this->redirect(url("home.index"));
+            return $this->ajax_echo(1, '', 'success');
         } else {
-
-            $this->ajax_echo(0, '', 'error');
+            return $this->ajax_echo(0, 'password error', 'error');
         }
 
 
+    }
+
+    public function doOut(){
+        session_unset();
+        $this->redirect(url("login.login"));
     }
 
 }
