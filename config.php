@@ -48,6 +48,6 @@ define('HEXO_SERVER_PORT','4000');
 define('USER','admin');
 
 
-define('PASS','$2y$10$HHI5ecGoMy7WUBMw62zW2uxUhX2hmvGqR4W0BR25O7VhZi7s8Z6aK');
+define('PASS','$2y$10$UckVx24iBcY5CDymQhyE.ePZRQ5fOSwol6Hsc68V6hg9QdCfqc5ie');
 
 

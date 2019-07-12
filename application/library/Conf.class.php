@@ -166,16 +166,23 @@ class Conf
         foreach ($this->data as $key => $value) {
             $re = '/define\([\"\']\s*' . $key . '\s*[\"\'],(.*)\)/m';
 
+            /**
+             * preg_replace 替换时候注意$+数字型。
+             * 最好是用单引号字符串。'\$'转义。
+             * 双引号字符串需要"\\\$",三个斜杠
+             * 感谢大佬【乔楚(正则之王)】解决问题
+             */
+            $value=str_replace('$','\\$',$value);
+
             if (substr($value, 0) == "\"" || substr($value, 0) == "'" || substr($value, -1) == "\"" || substr($value, -1) == "'") {
-                $subst = "define('{$key}',{$value})";
+                $subst = 'define(\''.$key.'\','.$value.')';
             } else {
-                $subst = "define('{$key}','{$value}')";
+                $subst = 'define(\''.$key.'\',\''.$value.'\')';
             }
 
             $info = preg_replace($re, $subst, $info);
 
         }
-        var_dump($info);
         file_put_contents($this->file, $info);
         return true;
     }
