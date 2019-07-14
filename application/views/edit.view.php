@@ -12,7 +12,7 @@ include($this->view_path('public/header_start'));
 ?>
 
 
-<!--第一步：引入Javascript / CSS （CDN）-->
+
 <!-- Markdown Editor CSS -->
 <link rel="stylesheet" href="assets/lib/material-icons.css" xmlns="http://www.w3.org/1999/html">
 <link rel="stylesheet" href="assets/lib/base16-light.css">
@@ -50,11 +50,9 @@ include($this->view_path('public/header_end'));
 <div id="toplevel">
     <form id="frm" class="layui-form" action="" lay-filter="example">
         <div id="in">
-            <textarea id="code" name="content">
-                <?php
+            <textarea id="code" name="content"><?php
                 echo isset($contents['content']) ? $contents['content'] : '';
-                ?>
-            </textarea>
+                ?></textarea>
         </div>
         <div id="out" class="markdown-body"></div>
         <div id="menu">
@@ -145,8 +143,13 @@ include($this->view_path('public/header_end'));
 <!--双击输入框-->
 <script type="text/javascript">
 
-
+    var con =$("#code").val();
     $(document).ready(function () {
+
+
+            localStorage.setItem('content',con);
+            editor.setValue(localStorage.getItem('content'));
+
         /**
          * 双击事件
          */

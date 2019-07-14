@@ -24,6 +24,8 @@ class Home extends MpController
         }
         $data = array(
             'title' => '编辑文章',
+            'page' =>'edit',
+
         );
         $data['contents'] = EditBlog::parse($name, $type);
         $this->view('edit', $data);
@@ -72,7 +74,13 @@ class Home extends MpController
      */
     public function doNew()
     {
-        $data = array('title' => '新建blog');
+        $content = file_get_contents(BLOG_DIR.'/scaffolds/'.HConfig::get('default_layout').'.md');
+
+        $data = array(
+            'title' => '新建blog',
+            'page'  =>'new',
+            'contents'=> array('content'=>$content),
+        );
         $this->view('edit', $data);
     }
 
