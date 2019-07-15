@@ -42,8 +42,7 @@ class ParseBlog
     public static function parse($file, $type = 'post')
     {
 
-        echo "**************";
-        echo $file;
+
         $dir = self::$src_dir . '/' . HConfig::get('source_dir') . '/' . self::$file_dirs[$type];
         $filename = $dir . '/' . $file;
 

@@ -12,7 +12,6 @@ include($this->view_path('public/header_start'));
 ?>
 
 
-
 <!-- Markdown Editor CSS -->
 <link rel="stylesheet" href="assets/lib/material-icons.css" xmlns="http://www.w3.org/1999/html">
 <link rel="stylesheet" href="assets/lib/base16-light.css">
@@ -30,6 +29,13 @@ include($this->view_path('public/header_start'));
     editUrl = "<?php
         echo isset($contents['filename']) ? url('#?hexoer.edit', $contents['filename']) : url('#?hexoer.new');
         ?>";
+    editType = "<?php
+        echo $page;
+        ?>";
+    redirectUrl = "<?php
+        echo $page == 'new' ? url('home.list') : url('home.list');
+        ?>";
+    saveedClock = true;
 </script>
 <?php
 include($this->view_path('public/header_end'));
@@ -78,17 +84,15 @@ include($this->view_path('public/header_end'));
         <div id="navbar">
             <div id="navcontent">
                 <a id="logo">
-                    <p id="title" class="left">
-                        <?php
+                    <p id="title" class="left"><?php
                         if (isset($contents['filename'])) {
-                            echo substr($contents['filename'],0,-3);
+                            echo substr($contents['filename'], 0, -3);
                         } else {
                             echo "<input id='newname' value='' type='text' name='newname' placeholder='请输入标题'  class='layui-input'>";
                         }
-                        ?>
-                    </p>
+                        ?></p>
                     <input type="hidden" id="oldname" name="oldname"
-                           value="<?php echo isset($contents['filename']) ? substr($contents['filename'],0,-3) : ''; ?>">
+                           value="<?php echo isset($contents['filename']) ? substr($contents['filename'], 0, -3) : ''; ?>">
                 </a>
 
                 <p id="edittitle" class="navbutton left " style="margin-right: 20px; display: none;"
@@ -143,12 +147,12 @@ include($this->view_path('public/header_end'));
 <!--双击输入框-->
 <script type="text/javascript">
 
-    var con =$("#code").val();
+    var con = $("#code").val();
     $(document).ready(function () {
 
 
-            localStorage.setItem('content',con);
-            editor.setValue(localStorage.getItem('content'));
+        localStorage.setItem('content', con);
+        editor.setValue(localStorage.getItem('content'));
 
         /**
          * 双击事件
@@ -159,6 +163,10 @@ include($this->view_path('public/header_end'));
             $("#edittitle").show();
         });
 
+
+        $("#code").on('keydown', function () {
+            saveedClock = true;
+        })
     });
 
 

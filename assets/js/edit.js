@@ -248,17 +248,27 @@ function saveInBrowser() {
                 closeOnConfirm: false
             },
             function () {
-                localStorage.setItem('content', text);
-
-
-                swal("已保存", "文档保存成功.", "success");
+                saveAlert(text);
             });
+    } else {
+        saveAlert(text);
+    }
+
+    console.log("Saved");
+}
+
+function saveAlert(text) {
+    var res = saveInServer();
+    if (res['code'] == 0) {
+        swal("未保存", res['tip'] + ".", "error");
     } else {
         localStorage.setItem('content', text);
         swal("已保存", "文档保存成功.", "success");
+        saveedClock = false;
+        if (editType == 'new') {
+            window.location = redirectUrl;
+        }
     }
-    saveInServer()
-    console.log("Saved");
 }
 
 
@@ -269,25 +279,26 @@ function saveInServer() {
      * 需要jquery
      */
     var oldname = $("#oldname").val();
+    oldname = oldname.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/\s]/gi, '');
     var newname = $("#newname").val() ? $("#newname").val() : $("#title").text();
+    newname = newname.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/\s]/gi, '');
     var dataArr = {
         'content': content,
         'oldname': oldname,
         'newname': newname
     };
     console.log(dataArr);
-
-
+    var res = null;
     $.ajax({
         url: editUrl,
         type: 'post',
         data: dataArr,
         async: false,
         success: function (response) {
-            console.log(response);
-            //后台返回的数据。这里给  抓页面元素填上去就OK了
+            res = JSON.parse(response);
         }
     })
+    return res;
 
 }
 
@@ -363,10 +374,15 @@ function start() {
 }
 
 window.addEventListener("beforeunload", function (e) {
-    var confirmationMessage = 'It looks like you have been editing something. '
-        + 'If you leave before saving, your changes will be lost.';
-    (e || window.event).returnValue = confirmationMessage; //Gecko + IE
-    return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
+    if (saveedClock) {
+        var confirmationMessage = '你好像在编辑什么东西. '
+            + '如果您在保存之前离开，您的更改将丢失.';
+        (e || window.event).returnValue = confirmationMessage; //Gecko + IE
+        return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
+    }else {
+        return null;
+    }
 });
+
 
 start();

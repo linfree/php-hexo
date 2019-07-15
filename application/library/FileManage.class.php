@@ -77,7 +77,6 @@ class FileManage
     public static function write_content($filename, $content, $isnew = false)
     {
 
-        var_dump($filename);
         if (self::check_file_exists($filename) or $isnew) {
 
             $type = mb_detect_encoding($filename, array("ASCII", "UTF-8", "GB2312", "GBK", "BIG5"));
@@ -122,9 +121,9 @@ class FileManage
         $en_type = mb_detect_encoding($filename, array("ASCII", "UTF-8", "GB2312", "GBK", "BIG5"));
 
 
-        var_dump('FileManage::check_file_exists()');
+        /*var_dump('FileManage::check_file_exists()');
         var_dump($en_type);
-        var_dump($filename);
+        var_dump($filename);*/
 
         if ($en_type == 'UTF-8') {
             $filename = iconv("UTF-8", "GBK", $filename);

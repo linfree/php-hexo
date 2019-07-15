@@ -62,9 +62,25 @@ class Hexoer extends MpController
      */
     public function doNew()
     {
-        echo BLOG_DIR . '/' . HConfig::get('source_dir') . '/_posts/' . $_POST['newname'] . '.md';
 
-        FileManage::write_content(BLOG_DIR . '/' . HConfig::get('source_dir') . '/_posts/' . $_POST['newname'] . '.md', $_POST['content'], true);
+        $name = $this->input->post('newname', null, true);
+        if (substr($name, -3) == ".md") {
+            $name = substr($name, 0, strlen($name) - 3);
+        }
+        $re = '/[`~!@#$%^&*()_|+\-=?;:\'",.<>\{\}\[\]\\\\\/\s]/i';
+        $name = preg_replace($re, '', $name);
+
+
+        $content = $this->input->post('content');
+        $filename = BLOG_DIR . '/' . HConfig::get('source_dir') . '/_posts/' . $name . '.md';
+
+
+        if (FileManage::check_file_exists($filename) || $name == '') {
+            return $this->ajax_echo(0, '文件重复', 'exists');
+        } else {
+            FileManage::write_content($filename, $content, true);
+            return $this->ajax_echo(1, '保存成功', 'success');
+        }
     }
 
     /**
@@ -87,7 +103,7 @@ class Hexoer extends MpController
         FileManage::write_content(ParseBlog::parse($newname, $type)['full_dir'], $content);
 
 
-        $this->ajax_echo(200, '', $_REQUEST);
+        $this->ajax_echo(1, "编辑成功", "");
 
     }
 
