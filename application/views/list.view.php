@@ -49,7 +49,9 @@ include($this->view_path('public/header_end'));
                     <td><?php echo $row['updated']; ?></td>
                     <td><?php echo $row['layout']; ?></td>
                     <td>
-                        <button type="button" class="layui-btn layui-btn-danger layui-btn-xs">删除</button>
+                        <button type="button" class="layui-btn layui-btn-danger layui-btn-xs">
+                            <a
+                                    href="<?php echo url("edit.del", $row['filename'], $row['layout']); ?>">删除</a></button>
                         <button type="button" class="layui-btn layui-btn-xs"><a
                                     href="<?php echo url("#?home.edit", $row['filename'], $row['layout']); ?>">编辑</a>
                         </button>

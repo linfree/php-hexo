@@ -1,30 +1,49 @@
 <?php
 
-class Home extends MpController
-{
+class Home extends MpController{
 
 
     /**
      * 首页
      */
-    public function doIndex()
-    {
+    public function doIndex(){
         $this->view('index');
+    }
+
+
+    /**
+     * 新博客的编辑页面
+     * @param $name
+     */
+    public function doNew(){
+        $content = FileManage::get_content(BLOG_DIR . '/scaffolds/' . HConfig::get('default_layout') . '.md');
+
+        $data = array(
+            'title' => '新建blog',
+            'page' => 'new',
+            'contents' => array('content' => $content),
+        );
+        $this->view('edit', $data);
     }
 
     /**
      * 编辑blog
      * @param string $id
      */
-    public function doEdit($name = '', $type = 'post')
-    {
+    public function doEdit($name = '', $type = 'post'){
 
-        if (substr(trim($name), -3) != '.md') {
+        if(substr(trim($name), -3) != '.md'){
             $name = $name . '.md';
         }
+
+
+        $re = '/[`~!@#$%^&*()_|+=?;:\'",<>\{\}\[\]\\\\\/\s]/i';
+        $name = preg_replace($re, '', $name);
+
+
         $data = array(
             'title' => '编辑文章',
-            'page' =>'edit',
+            'page' => 'edit',
 
         );
         $data['contents'] = EditBlog::parse($name, $type);
@@ -36,8 +55,7 @@ class Home extends MpController
      * 显示博客列表
      * @param string $type 显示的类型 草稿或
      */
-    public function doList($type = '')
-    {
+    public function doList($type = ''){
         $type = $type == 'draft' ? 'draft' : 'post';
 
 
@@ -52,11 +70,11 @@ class Home extends MpController
         $res = [];
 
 
-        foreach ($posts as $post) {
+        foreach($posts as $post){
             $res[] = ParseBlog::parse($post);
         }
 
-        foreach ($drafts as $draft) {
+        foreach($drafts as $draft){
             $res[] = ParseBlog::parse($draft, 'draft');
         }
 
@@ -69,27 +87,10 @@ class Home extends MpController
     }
 
     /**
-     * 新博客的编辑页面
-     * @param $name
-     */
-    public function doNew()
-    {
-        $content = file_get_contents(BLOG_DIR.'/scaffolds/'.HConfig::get('default_layout').'.md');
-
-        $data = array(
-            'title' => '新建blog',
-            'page'  =>'new',
-            'contents'=> array('content'=>$content),
-        );
-        $this->view('edit', $data);
-    }
-
-    /**
      * 设置页面
      * 设置hexo相关的信息，如git，如主题，目录等，_config.yml文件
      */
-    public function doSetting()
-    {
+    public function doSetting(){
         $this->view('setting');
     }
 
@@ -98,24 +99,21 @@ class Home extends MpController
      * 系统信息，状态
      * hexo版本，服务的状态，文章总数...
      */
-    public function doStatus()
-    {
+    public function doStatus(){
         $this->view('status');
     }
 
     /**
      * 关于页面
      */
-    public function doAbout()
-    {
+    public function doAbout(){
         $this->view('about');
     }
 
     /**
      * 初始化的界面
      */
-    public function doInit()
-    {
+    public function doInit(){
         $this->view('init');
     }
 }

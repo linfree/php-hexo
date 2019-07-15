@@ -27,15 +27,15 @@ include($this->view_path('public/header_start'));
 
 <script>
     editUrl = "<?php
-        echo isset($contents['filename']) ? url('#?hexoer.edit', $contents['filename']) : url('#?hexoer.new');
+        echo isset($contents['filename']) ? url('edit.edit', $contents['filename']) : url('edit.new');
         ?>";
     editType = "<?php
         echo $page;
         ?>";
     redirectUrl = "<?php
-        echo $page == 'new' ? url('home.list') : url('home.list');
+        echo $page == 'new' ? url('home.list') : url('home.edit');
         ?>";
-    saveedClock = true;
+    saveedClock = false;
 </script>
 <?php
 include($this->view_path('public/header_end'));
@@ -164,9 +164,9 @@ include($this->view_path('public/header_end'));
         });
 
 
-        $("#code").on('keydown', function () {
-            saveedClock = true;
-        })
+        $('#in').bind('DOMNodeInserted',function(){
+            saveedClock=true;
+        });
     });
 
 

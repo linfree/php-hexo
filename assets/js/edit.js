@@ -265,7 +265,9 @@ function saveAlert(text) {
         localStorage.setItem('content', text);
         swal("已保存", "文档保存成功.", "success");
         saveedClock = false;
-        if (editType == 'new') {
+        if (editType == 'edit') {
+            window.location = redirectUrl + "/" + res['data']['newname'] + '/' + res['data']['type'];
+        } else {
             window.location = redirectUrl;
         }
     }
@@ -279,9 +281,9 @@ function saveInServer() {
      * 需要jquery
      */
     var oldname = $("#oldname").val();
-    oldname = oldname.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/\s]/gi, '');
+    oldname = oldname.replace(/[`~!@#$%^&*()_|+=?;:'",.<>\{\}\[\]\\\/\s]/gi, '');
     var newname = $("#newname").val() ? $("#newname").val() : $("#title").text();
-    newname = newname.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/\s]/gi, '');
+    newname = newname.replace(/[`~!@#$%^&*()_|+=?;:'",.<>\{\}\[\]\\\/\s]/gi, '');
     var dataArr = {
         'content': content,
         'oldname': oldname,
@@ -379,7 +381,7 @@ window.addEventListener("beforeunload", function (e) {
             + '如果您在保存之前离开，您的更改将丢失.';
         (e || window.event).returnValue = confirmationMessage; //Gecko + IE
         return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
-    }else {
+    } else {
         return null;
     }
 });

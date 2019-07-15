@@ -44,7 +44,7 @@ class Hexoer extends MpController
     {
         $hexo = new Hexo();
         $res = $hexo->clear();
-        $this->ajax_echo(200, '', $res);
+        $this->ajax_echo(1, '清理成功.', $res);
     }
 
     /**
@@ -57,55 +57,6 @@ class Hexoer extends MpController
     }
 
 
-    /**
-     * 新建博客
-     */
-    public function doNew()
-    {
-
-        $name = $this->input->post('newname', null, true);
-        if (substr($name, -3) == ".md") {
-            $name = substr($name, 0, strlen($name) - 3);
-        }
-        $re = '/[`~!@#$%^&*()_|+\-=?;:\'",.<>\{\}\[\]\\\\\/\s]/i';
-        $name = preg_replace($re, '', $name);
-
-
-        $content = $this->input->post('content');
-        $filename = BLOG_DIR . '/' . HConfig::get('source_dir') . '/_posts/' . $name . '.md';
-
-
-        if (FileManage::check_file_exists($filename) || $name == '') {
-            return $this->ajax_echo(0, '文件重复', 'exists');
-        } else {
-            FileManage::write_content($filename, $content, true);
-            return $this->ajax_echo(1, '保存成功', 'success');
-        }
-    }
-
-    /**
-     * 编辑博客
-     */
-    public function doEdit($name, $type = 'post')
-    {
-
-
-        $oldname = trim($_POST['oldname']) . '.md';
-        $newname = trim($_POST['newname']) . '.md';
-        $content = trim($_POST['content']);
-
-        $oldfile = ParseBlog::parse($oldname, $type)['full_dir'];
-
-        if ($oldname !== $newname) {
-            FileManage::mv_file($oldfile, dirname($oldfile) . '/' . $newname);
-        }
-
-        FileManage::write_content(ParseBlog::parse($newname, $type)['full_dir'], $content);
-
-
-        $this->ajax_echo(1, "编辑成功", "");
-
-    }
 
 
     /**

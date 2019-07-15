@@ -41,7 +41,9 @@ class ParseBlog
 
     public static function parse($file, $type = 'post')
     {
-
+        if(substr(trim($file), -3) != '.md'){
+            $file = $file . '.md';
+        }
 
         $dir = self::$src_dir . '/' . HConfig::get('source_dir') . '/' . self::$file_dirs[$type];
         $filename = $dir . '/' . $file;
