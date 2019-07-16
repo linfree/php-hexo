@@ -40,17 +40,32 @@ include($this->view_path('public/header_end'));
         # 服务状态
     </h3>
     <ul class="s1 left-text ">
-        <li>
-            <div style="float: left ;">服务【已启动】</div>
-            <div class="heart" style="float: left"></div>
 
-        </li>
-        <li style="clear: both;">监听IP：0.0.0.0</li>
-        <li>监听端口：4000</li>
-        <li>进程PID：11222</li>
-        <li>
-            <button class="button">结束服务</button>
-        </li>
+        <?php if($server_status){ ?>
+            <li>
+                <div style="float: left ;">服务【已启动】</div>
+                <div class="heart" style="float: left;"></div>
+
+            </li>
+            <li style="clear: both;">监听IP：<?php echo $server_ip; ?></li>
+            <li>监听端口：<?php echo $server_port; ?></li>
+            <li>进程PID：<?php echo $server_status; ?></li>
+            <li>
+                <button class="button"><a href="<?php echo url("hexoer.stop");?>">结束服务</a></button>
+            </li>
+        <?php }else{ ?>
+            <li>
+                <div style="float: left ;">服务【未启动】</div>
+                <div class="heart" style="float: left;"></div>
+
+            </li>
+            <li style="clear: both;">监听IP：<?php echo $server_ip; ?></li>
+            <li>监听端口：<?php echo $server_port; ?></li>
+            <li>进程PID：NULL</li>
+            <li>
+                <button class="button"><a href="<?php echo url("hexoer.start");?>">开始服务</a></button>
+            </li>
+        <?php } ?>
     </ul>
     <h3 class="left-text" style="font-weight:400">
         # HEXO信息

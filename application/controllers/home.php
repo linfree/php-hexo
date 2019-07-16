@@ -117,7 +117,22 @@ class Home extends MpController
      */
     public function doStatus()
     {
-        $this->view('status');
+        $hexo = new Hexo();
+
+        $server_status = $hexo->find_server();
+        $server_ip = HEXO_SERVER_IP;
+        $server_port = HEXO_SERVER_PORT;
+
+        $hexo_info = $hexo->version();
+
+        $data = array(
+            "server_status" => $server_status,
+            "server_ip" => $server_ip,
+            "server_port" => $server_port,
+            "hexo_info" => $hexo_info,
+        );
+        var_dump($data);
+        $this->view('status',$data);
     }
 
     /**

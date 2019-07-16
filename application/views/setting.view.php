@@ -108,7 +108,7 @@ include($this->view_path('public/header_end'));
         <div class="layui-form-item">
             <label class="layui-form-label">资源目录</label>
             <div class="layui-input-block">
-                <input type="text" name="source_di" value="<?php echo $source_dir; ?>" class="layui-input">
+                <input type="text" name="source_dir" value="<?php echo $source_dir; ?>" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">

@@ -102,6 +102,9 @@ class Hexoer extends MpController
 
     public function doSetting()
     {
+        $old_config = HConfig::get();
+
+
         $sitename = $this->input->post("sitename");
         $subtitle = $this->input->post("subtitle");
         $description = $this->input->post("description");
@@ -130,14 +133,17 @@ class Hexoer extends MpController
             "default_layout" => $default_layout,
             "per_page" => (int)$per_page,
             "theme" => $theme,
-            "deploy" => array(
+            "deploy" => array_merge(
+                $old_config['deploy'],
+                array(
                 "repo" => $git_repo,
                 "branch" => $git_branch,
                 "message" => $git_message
+            )
             ),
         );
 
-        $old_config = HConfig::get();
+
         $settings = array_merge($old_config, $settings);
         HConfig::set("ALL", $settings);
         $this->ajax_echo(1, '修改成功', 'success');
