@@ -38,15 +38,20 @@ class HConfig
      */
     public static function set($key, $value)
     {
-        $config_arr = Yaml::parseFile(self::$conf_file);
-
-        if (array_key_exists($key, $config_arr)) {
-            $config_arr[$key] = $value;
-            $con = Yaml::dump($config_arr);
+        if ($key === "ALL" && is_array($value)) {
+            $con = Yaml::dump($value);
             file_put_contents(self::$conf_file, $con);
             return true;
         } else {
-            return false;
+            $config_arr = Yaml::parseFile(self::$conf_file);
+            if (array_key_exists($key, $config_arr)) {
+                $config_arr[$key] = $value;
+                $con = Yaml::dump($config_arr);
+                file_put_contents(self::$conf_file, $con);
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 }

@@ -57,8 +57,6 @@ class Hexoer extends MpController
     }
 
 
-
-
     /**
      * 生成静态文件
      */
@@ -99,7 +97,50 @@ class Hexoer extends MpController
                 $res_new[] = $tmp;
             }
         }
-        $this->ajax_echo(0, '', $res_new);
+        $this->ajax_echo(1, '获取成功', $res_new);
+    }
+
+    public function doSetting()
+    {
+        $sitename = $this->input->post("sitename");
+        $subtitle = $this->input->post("subtitle");
+        $description = $this->input->post("description");
+        $keywords = $this->input->post("keywords");
+        $author = $this->input->post("author");
+        $url = $this->input->post("url");
+        $root = $this->input->post("root");
+        $source_dir = $this->input->post("source_dir");
+        $default_layout = $this->input->post("default_layout");
+        $per_page = $this->input->post("per_page");
+        $theme = $this->input->post("theme");
+        $git_repo = $this->input->post("git_repo");
+        $git_branch = $this->input->post("git_branch");
+        $git_message = $this->input->post("git_message");
+
+
+        $settings = array(
+            "title" => $sitename,
+            "subtitle" => $subtitle,
+            "description" => $description,
+            "keywords" => $keywords,
+            "author" => $author,
+            "url" => $url,
+            "root" => $root,
+            "source_dir" => $source_dir,
+            "default_layout" => $default_layout,
+            "per_page" => (int)$per_page,
+            "theme" => $theme,
+            "deploy" => array(
+                "repo" => $git_repo,
+                "branch" => $git_branch,
+                "message" => $git_message
+            ),
+        );
+
+        $old_config = HConfig::get();
+        $settings = array_merge($old_config, $settings);
+        HConfig::set("ALL", $settings);
+        $this->ajax_echo(1, '修改成功', 'success');
     }
 
 

@@ -1,12 +1,14 @@
 <?php
 
-class Home extends MpController{
+class Home extends MpController
+{
 
 
     /**
      * 首页
      */
-    public function doIndex(){
+    public function doIndex()
+    {
         $this->view('index');
     }
 
@@ -15,7 +17,8 @@ class Home extends MpController{
      * 新博客的编辑页面
      * @param $name
      */
-    public function doNew(){
+    public function doNew()
+    {
         $content = FileManage::get_content(BLOG_DIR . '/scaffolds/' . HConfig::get('default_layout') . '.md');
 
         $data = array(
@@ -30,9 +33,10 @@ class Home extends MpController{
      * 编辑blog
      * @param string $id
      */
-    public function doEdit($name = '', $type = 'post'){
+    public function doEdit($name = '', $type = 'post')
+    {
 
-        if(substr(trim($name), -3) != '.md'){
+        if (substr(trim($name), -3) != '.md') {
             $name = $name . '.md';
         }
 
@@ -55,7 +59,8 @@ class Home extends MpController{
      * 显示博客列表
      * @param string $type 显示的类型 草稿或
      */
-    public function doList($type = ''){
+    public function doList($type = '')
+    {
         $type = $type == 'draft' ? 'draft' : 'post';
 
 
@@ -70,18 +75,18 @@ class Home extends MpController{
         $res = [];
 
 
-        foreach($posts as $post){
+        foreach ($posts as $post) {
             $res[] = ParseBlog::parse($post);
         }
 
-        foreach($drafts as $draft){
+        foreach ($drafts as $draft) {
             $res[] = ParseBlog::parse($draft, 'draft');
         }
+        foreach ($res as $key => $row) {
 
-        /*foreach ($res as $re){
-            $time[] = $re['modtime'];
+            $updated[$key] = $row['updated'];
         }
-        array_multisort($time,SORT_NUMERIC,SORT_DESC,$res);*/
+        array_multisort($updated, SORT_DESC, $res);
         $data = array('name' => $type, "data" => $res);
         $this->view('list', $data);
     }
@@ -90,8 +95,19 @@ class Home extends MpController{
      * 设置页面
      * 设置hexo相关的信息，如git，如主题，目录等，_config.yml文件
      */
-    public function doSetting(){
-        $this->view('setting');
+    public function doSetting()
+    {
+
+        $settings = HConfig::get();
+        var_dump($settings);
+        if ($settings['deploy']['type'] == null) {
+            $git['type'] = 'git';
+            $git['repo'] = null ;# <repository url> https://bitbucket.org/JohnSmith/johnsmith.bitbucket.io;
+            $git['branch'] = 'master';#'# [branch] published';
+            $git['message'] = null;# 自定义提交信息 (默认为 Site updated: {{ now(\'YYYY-MM-DD HH:mm:ss\') }});
+            HConfig::set('deploy', $git);
+        }
+        $this->view('setting', $settings);
     }
 
 
@@ -99,21 +115,24 @@ class Home extends MpController{
      * 系统信息，状态
      * hexo版本，服务的状态，文章总数...
      */
-    public function doStatus(){
+    public function doStatus()
+    {
         $this->view('status');
     }
 
     /**
      * 关于页面
      */
-    public function doAbout(){
+    public function doAbout()
+    {
         $this->view('about');
     }
 
     /**
      * 初始化的界面
      */
-    public function doInit(){
+    public function doInit()
+    {
         $this->view('init');
     }
 }

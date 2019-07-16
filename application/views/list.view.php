@@ -56,9 +56,13 @@ include($this->view_path('public/header_end'));
                                     href="<?php echo url("#?home.edit", $row['filename'], $row['layout']); ?>">编辑</a>
                         </button>
                         <?php if ($row['layout'] == 'post') { ?>
-                            <button type="button" class="layui-btn layui-btn-normal layui-btn-xs">转草</button>
+                            <button type="button" class="layui-btn layui-btn-normal layui-btn-xs">
+                                <a href="<?php echo url("edit.modtype", $row['filename'], $row['layout'],'draft'); ?>">转草</a>
+                            </button>
                         <?php } else { ?>
-                            <button type="button" class="layui-btn layui-btn-normal layui-btn-xs">推送</button>
+                            <button type="button" class="layui-btn layui-btn-normal layui-btn-xs">
+                                <a href="<?php echo url("edit.modtype", $row['filename'], $row['layout'],'post'); ?>">推送</a>
+                            </button>
                         <?php } ?>
                     </td>
                 </tr>

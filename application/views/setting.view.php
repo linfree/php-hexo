@@ -15,8 +15,8 @@ include($this->view_path('public/header_start'));
 <link rel="stylesheet" href="assets/css/heart.css">
 
 <style>
-    .left-text {
-        padding-top: 1em;
+    .left-text-2 {
+        text-align: left;
     }
 </style>
 <?php
@@ -37,7 +37,7 @@ include($this->view_path('public/header_end'));
 <div class=" content " style="width: 60%;margin: 0 20%">
 
 
-    <form class="layui-form" action="">
+    <form class="layui-form" method="post" action="<?php echo url("hexoer.setting"); ?>">
 
         <!--------------------------------网站配置------------------------>
         <fieldset class="layui-elem-field layui-field-title " style="margin: 30px 0;">
@@ -47,27 +47,37 @@ include($this->view_path('public/header_end'));
         <div class="layui-form-item">
             <label class="layui-form-label">网站标题</label>
             <div class="layui-input-block">
-                <input type="text" name="sitename" value="layuiAdmin" class="layui-input">
+                <input type="text" name="sitename" value="<?php echo $title; ?>" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">网站副标题 </label>
             <div class="layui-input-block">
-                <input type="text" name="domain" lay-verify="url" value="http://www.layui.com" class="layui-input">
+                <input type="text" name="subtitle" lay-verify="title" placeholder="请输入网站副标题"
+                       value="<?php echo $subtitle; ?>" class="layui-input">
             </div>
         </div>
 
         <div class="layui-form-item">
             <label class="layui-form-label">作者名称 </label>
             <div class="layui-input-block">
-                <input type="text" name="domain" lay-verify="url" value="http://www.layui.com" class="layui-input">
+                <input type="text" name="author" lay-verify="title" value="<?php echo $author; ?>" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">网站关键字 </label>
+            <div class="layui-input-block">
+                <input type="text" name="keywords" lay-verify="title" placeholder="多个关键字用,分割"
+                       value="<?php echo $keywords; ?>" class="layui-input">
             </div>
         </div>
 
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">网站描述</label>
             <div class="layui-input-block">
-                <textarea name="desc" placeholder="请输入内容" class="layui-textarea"></textarea>
+                <textarea name="description" placeholder="请输入网站描述" value="<?php echo $description; ?>"
+                          class="layui-textarea"></textarea>
             </div>
         </div>
 
@@ -75,32 +85,99 @@ include($this->view_path('public/header_end'));
         <div class="layui-form-item">
             <label class="layui-form-label">网站地址</label>
             <div class="layui-input-block">
-                <input type="text" name="sitename" value="http://fbi.st" class="layui-input">
+                <input type="text" name="url" lay-verify="url" value="<?php echo $url; ?>" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">根目录 </label>
             <div class="layui-input-block">
-                <input type="text" name="domain" lay-verify="url" value="/" class="layui-input">
+                <input type="text" name="root" lay-verify="title" value="<?php echo $root; ?>" class="layui-input">
             </div>
         </div>
         <!--提示-->
-        <blockquote class="layui-elem-quote layui-text">
-            如果您的网站存放在子目录中，例如 http://yoursite.com/blog，则请将您的 url 设为 http://yoursite.com/blog 并把 root 设为 /blog/。
+        <blockquote class="layui-elem-quote layui-text left-text-2">如果您的网站存放在子目录中，例如: <span style="color: #00c4ff">http://yoursite.com/blog</span>，则请将您的
+            url 设为 <span style="color: #00c4ff">http://yoursite.com/blog</span> 并把 root 设为 <span style="color: #00c4ff">/blog/</span>。
         </blockquote>
+
+
+        <!--------------------------------BLOG配置------------------------>
+        <fieldset class="layui-elem-field layui-field-title " style="margin: 30px 0;">
+            <legend>BLOG配置</legend>
+        </fieldset>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">资源目录</label>
+            <div class="layui-input-block">
+                <input type="text" name="source_di" value="<?php echo $source_dir; ?>" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">默认布局 </label>
+            <div class="layui-input-block">
+                <input type="text" name="default_layout" value="<?php echo $default_layout; ?>"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">每页博客数</label>
+            <div class="layui-input-block">
+                <input type="text" name="per_page" lay-verify="number" value="<?php echo $per_page; ?>"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">主题 </label>
+            <div class="layui-input-block">
+                <input type="text" name="theme" placeholder="请输入关键字" value="<?php echo $theme; ?>"
+                       class="layui-input">
+            </div>
+        </div>
+
+
         <!--------------------------------git配置------------------------>
         <fieldset class="layui-elem-field layui-field-title " style="margin: 30px 0;">
             <legend>GIT配置</legend>
         </fieldset>
 
-
         <div class="layui-form-item">
-            <label class="layui-form-label">输入框</label>
+            <label class="layui-form-label">仓库地址</label>
             <div class="layui-input-block">
-                <input type="text" name="title" required lay-verify="required" placeholder="请输入标题" autocomplete="off"
+                <input type="text" name="git_repo" lay-verify="url" placeholder="输入blog仓库地址"
+                       value="<?php echo $deploy['repo']; ?>" autocomplete="off"
                        class="layui-input">
             </div>
         </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">分支</label>
+            <div class="layui-input-block">
+                <input type="text" name="git_branch" placeholder="默认为：master分支"
+                       value="<?php echo $deploy['branch']; ?>" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">提交信息</label>
+            <div class="layui-input-block">
+                <input type="text" name="git_message" placeholder="默认为：Site updated: {{ now('YYYY-MM-DD HH:mm:ss') }}"
+                       value="<?php echo $deploy['message']; ?>" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <!--提示-->
+        <blockquote class="layui-elem-quote layui-text left-text-2">
+
+            git仓库地址类似 <span style="color: #00c4ff"># <repository
+                        url> https://github.com/linfree/linfree.github.io</span>
+            <br>
+            分支默认为：<span style="color: #00c4ff">master</span>
+            <br>
+            提交信息默认为：<span style="color: #00c4ff">Site updated: {{ now('YYYY-MM-DD HH:mm:ss') }}</span>
+
+        </blockquote>
+        <!--
         <div class="layui-form-item">
             <label class="layui-form-label">密码框</label>
             <div class="layui-input-inline">
@@ -185,7 +262,7 @@ include($this->view_path('public/header_end'));
             <div class="layui-input-block">
                 <textarea name="descript" class="layui-textarea">layuiAdmin 是 layui 官方出品的通用型后台模板解决方案，提供了单页版和 iframe 版两种开发模式。layuiAdmin 是目前非常流行的后台模板框架，广泛用于各类管理平台。</textarea>
             </div>
-        </div>
+        </div>-->
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">版权信息</label>
             <div class="layui-input-block">

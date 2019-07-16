@@ -48,50 +48,72 @@ class Edit extends MpController
         $oldfile = ParseBlog::parse($oldname, $type)['full_dir'];
         $newfile = dirname($oldfile) . '/' . $newname;
 
-        if($oldname !== $newname){
-            if(FileManage::check_file_exists($newfile) || $newname === '.md'){
+        if ($oldname !== $newname) {
+            if (FileManage::check_file_exists($newfile) || $newname === '.md') {
                 return $this->ajax_echo(0, "文件已存在", 'error');
-            }else{
+            } else {
                 FileManage::mv_file($oldfile, $newfile);
             }
         }
 
         $res = FileManage::write_content($newfile, $content);
-        if($res){
-            return $this->ajax_echo(1, "编辑成功", array("newname"=>$newname,"type"=>$type));
-        }else{
+        if ($res) {
+            return $this->ajax_echo(1, "编辑成功", array("newname" => $newname, "type" => $type));
+        } else {
             return $this->ajax_echo(0, "没有写入成功", "error");
         }
 
     }
 
 
-    public function doDel($name,$type = 'post')
+    public function doDel($name, $type = 'post')
     {
         $re = '/[`~!@#$%^&*()_|+=?;:\'",<>\{\}\[\]\\\\\/\s]/i';
 
-        $name = preg_replace($re, '', $name) ;
+        $name = preg_replace($re, '', $name);
         $content = ParseBlog::parse($name, $type);
         $filedir = $content['full_dir'];
 
-        if($content['layout']=='recycle'){
+        if ($content['layout'] == 'recycle') {
             $res = unlink($filedir);
-            if($res){
-                return $this->ajax_echo(1,"已经彻底删除文件",'success');
-            }else{
-                return $this->ajax_echo(0,"删除文件失败",'error');
+            if ($res) {
+                return $this->ajax_echo(1, "已经彻底删除文件", 'success');
+            } else {
+                return $this->ajax_echo(0, "删除文件失败", 'error');
             }
-        }else{
-            $recycle_dir = BLOG_DIR.'/'.HConfig::get("source_dir").'/_recycle/';
+        } else {
+            $recycle_dir = BLOG_DIR . '/' . HConfig::get("source_dir") . '/_recycle/';
 
-            if(!is_dir($recycle_dir)){
-                if(!mkdir($recycle_dir,0755)){
-                    return $this->ajax_echo(0,"创建回收站失败",'error');
+            if (!is_dir($recycle_dir)) {
+                if (!mkdir($recycle_dir, 0755)) {
+                    return $this->ajax_echo(0, "创建回收站失败", 'error');
                 };
             }
             FileManage::mv_file($filedir, $recycle_dir . $content['filename']);
-            return $this->ajax_echo(1,"文件已经移到回收站",'success');
+            return $this->ajax_echo(1, "文件已经移到回收站", 'success');
         }
+
+    }
+
+    public function doModType($name, $src_type = 'post', $des_type = "draft")
+    {
+
+        $dir_hash = array(
+            "draft" => DRAFT_DIR,
+            "post" => PUT_DIR,
+            "recycle" => RECYCLE_DIR
+        );
+        $type_keys = array_keys($dir_hash);
+        if (!in_array($des_type, $type_keys) || !in_array($src_type, $type_keys)) {
+            return $this->ajax_echo(0, "修改类型出错", 'error');
+        }
+        $re = '/[`~!@#$%^&*()_|+=?;:\'",<>\{\}\[\]\\\\\/\s]/i';
+
+        $name = preg_replace($re, '', $name);
+        $content = ParseBlog::parse($name, $src_type);
+        FileManage::mv_file($content['full_dir'], $dir_hash[$des_type] . '/' . $content['filename']);
+
+        return $this->ajax_echo(1, "文件修改成功", 'success');
 
     }
 
