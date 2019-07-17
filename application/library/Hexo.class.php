@@ -117,7 +117,7 @@ class Hexo
     public function generate()
     {
         if ($this->os === 'win') {
-            $cmd = 'start /b '.$this->hexo_exe . ' --cwd ' . BLOG_DIR . ' generate 2>&1 &';
+            $cmd = 'start /b ' . $this->hexo_exe . ' --cwd ' . BLOG_DIR . ' generate 2>&1 &';
         } else {
             $cmd = 'nohup ' . $this->hexo_exe . ' --cwd ' . BLOG_DIR . ' generate > /dev/null 2>&1 &';
         }
@@ -135,12 +135,12 @@ class Hexo
             return true;
         } else {
             if ($this->os === 'win') {
-                $cmd = $this->hexo_exe . ' --cwd ' . BLOG_DIR . ' server -g >nul 2>nul';
-                $this->exec_cmd("D:\phpStudy\WWW\php_hexo\RunHiddenConsole.exe ".$cmd );
+                #$cmd = 'start /b' . $this->hexo_exe . ' --cwd ' . BLOG_DIR . ' server -g >nul 2>nul';
+//                pclose(popen($cmd,'r'));
+                return false;
             } else {
                 $cmd = 'cd ' . BLOG_DIR . '&&nohup ' . $this->hexo_exe . ' server -g > /dev/null 2>&1 & echo $!';
             }
-            print_r($cmd);
             return $this->exec_cmd($cmd);
         }
     }
@@ -174,9 +174,9 @@ class Hexo
     public function find_server()
     {
         if ($this->os === 'win') {
-            $cmd = 'netstat -aon | findstr '.HEXO_SERVER_IP.':'.HEXO_SERVER_PORT;
+            $cmd = 'netstat -aon | findstr ' . HEXO_SERVER_IP . ':' . HEXO_SERVER_PORT;
         } else {
-            $cmd = 'netstat -anp | grep '.HEXO_SERVER_IP.':'.HEXO_SERVER_PORT.' | awk \'{print $7}\'';
+            $cmd = 'netstat -anp | grep ' . HEXO_SERVER_IP . ':' . HEXO_SERVER_PORT . ' | awk \'{print $7}\'';
         }
         if ($res = $this->exec_cmd($cmd)[0]) {
             if ($this->os === 'win') {

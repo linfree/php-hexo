@@ -21,10 +21,10 @@ include($this->view_path('public/header_end'));
         <div class="title m-b-md">
             Login
         </div>
-        <form method="post" action="<?php echo url("?#login.checkLogin") ?>">
-            <input type="text" required="required" placeholder="用户名" name="user"></input>
-            <input type="password" required="required" placeholder="密码" name="pass"></input>
-            <button class="but" type="submit">登录</button>
+        <form method="post"  class="layui-form">
+            <input type="text" class="layui-input" required="required" lay-verify="required"  placeholder="用户名" name="user"></input>
+            <input type="password" class="layui-input" required="required"lay-verify="required"  placeholder="密码" name="pass"></input>
+            <button class="but"  lay-submit  lay-filter="sub" type="button">登录</button>
         </form>
     </div>
 </div>
@@ -34,4 +34,44 @@ include($this->view_path('public/header_end'));
 include($this->view_path('public/footer'));
 ?>
 
+<script>
+    $(document).ready(function () {
+        var form = layui.form;
+
+        form.on('submit(sub)', function (data) {
+
+            loading();
+            console.log(data);
+            $.ajax({
+                url: "<?php echo url('?#login.checkLogin') ?>",
+                data: data.field,
+                type: "POST",
+                success:function (result) {
+                    result = JSON.parse(result)
+                    console.log(result);
+                    if (result['code']==1){
+                            close_loading();
+                            window.location="<?php echo url('?#home.index') ?>"
+                        }else {
+                            close_loading();
+                            layer.msg(result.tip);
+
+                        }
+                    }
+            })
+
+        });
+    });
+
+    var loading = function () {
+        index = layer.load(1, {
+            shade: [0.5, '#111'], //0.1透明度的白色背景
+        });
+
+    }
+
+    var close_loading =function () {
+        layer.close(index);
+    }
+</script>
 </html>

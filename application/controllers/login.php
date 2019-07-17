@@ -11,6 +11,10 @@ class Login extends MpController{
      * 登录页面
      */
     public function doLogin(){
+        sessionStart();
+        if (isset($_SESSION['is_login'])){
+            $this->redirect(url("home.index"));
+        }
         $this->view('login');
     }
 
@@ -22,7 +26,7 @@ class Login extends MpController{
 
 
         if($user != USER){
-            return $this->ajax_echo(0, 'user error', 'error');
+            return $this->ajax_echo(0, 'user error!', 'error');
         }
 
         if(password_verify($pass, PASS)){
@@ -30,10 +34,10 @@ class Login extends MpController{
             sessionStart();
             $_SESSION['user'] = 'admin';
             $_SESSION['is_login'] = true;
-            $this->redirect(url("home.index"));
-            return $this->ajax_echo(1, '', 'success');
+
+            return $this->ajax_echo(1, '登录成功', 'success');
         }else{
-            return $this->ajax_echo(0, 'password error', 'error');
+            return $this->ajax_echo(0, 'password error!', 'error');
         }
 
 

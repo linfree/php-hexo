@@ -22,7 +22,12 @@ class Hexoer extends MpController
     {
         $hexo = new Hexo();
         $res = $hexo->server();
-        echo $res;
+        if ($res){
+            echo $this->ajax_echo(1,'启动成功','success');
+        }else{
+            echo $this->ajax_echo(0,'启动失败','error');
+        }
+
     }
 
     /**
@@ -33,7 +38,11 @@ class Hexoer extends MpController
     {
         $hexo = new Hexo();
         $res = $hexo->kill_server();
-        echo $res;
+        if ($res){
+            echo $this->ajax_echo(1,'停止成功','success');
+        }else{
+            echo $this->ajax_echo(0,'停止失败','error');
+        }
     }
 
 

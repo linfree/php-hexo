@@ -82,10 +82,12 @@ class Home extends MpController
         foreach ($drafts as $draft) {
             $res[] = ParseBlog::parse($draft, 'draft');
         }
-        foreach ($res as $key => $row) {
 
+
+        foreach ($res as $key => $row) {
             $updated[$key] = $row['updated'];
         }
+
         array_multisort($updated, SORT_DESC, $res);
         $data = array('name' => $type, "data" => $res);
         $this->view('list', $data);
@@ -99,7 +101,7 @@ class Home extends MpController
     {
 
         $settings = HConfig::get();
-        var_dump($settings);
+
         if ($settings['deploy']['type'] == null) {
             $git['type'] = 'git';
             $git['repo'] = null ;# <repository url> https://bitbucket.org/JohnSmith/johnsmith.bitbucket.io;
@@ -122,16 +124,17 @@ class Home extends MpController
         $server_status = $hexo->find_server();
         $server_ip = HEXO_SERVER_IP;
         $server_port = HEXO_SERVER_PORT;
-
         $hexo_info = $hexo->version();
+        $platform = strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ? 'win' : 'linux';
 
         $data = array(
             "server_status" => $server_status,
             "server_ip" => $server_ip,
             "server_port" => $server_port,
             "hexo_info" => $hexo_info,
+            "platform"=>$platform,
         );
-        var_dump($data);
+        //var_dump($data);
         $this->view('status',$data);
     }
 
