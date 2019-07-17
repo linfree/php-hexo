@@ -28,6 +28,10 @@
         margin: 0 20%;
     }
 
+    .left-text-2 {
+        text-align: left;
+    }
+
 </style>
 </head>
 

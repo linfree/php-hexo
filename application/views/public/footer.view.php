@@ -17,6 +17,16 @@
 
         layer.msg('Hello World');
     }();*/
+    var loading = function () {
+        index = layer.load(1, {
+            shade: [0.5, '#111'], //0.1透明度的白色背景
+        });
+
+    }
+
+    var close_loading =function () {
+        layer.close(index);
+    }
 </script>
 
 

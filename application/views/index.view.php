@@ -29,7 +29,7 @@ include($this->view_path('public/header_end'));
             <a href="<?php echo url('#?home.list') ?>">文章列表</a>
             <a href="https://blog.laravel.com">回收站</a>
             <a href="<?php echo url('#?home.setting') ?>">setting</a>
-            <a href="https://github.com/linfree/">GitHub</a>
+            <a href="<?php echo url('#?home.about') ?>">About</a>
         </div>
     </div>
 

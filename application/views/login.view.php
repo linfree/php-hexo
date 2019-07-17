@@ -24,6 +24,7 @@ include($this->view_path('public/header_end'));
         <form method="post"  class="layui-form">
             <input type="text" class="layui-input" required="required" lay-verify="required"  placeholder="用户名" name="user"></input>
             <input type="password" class="layui-input" required="required"lay-verify="required"  placeholder="密码" name="pass"></input>
+            <a href="<?php echo url('?#login.changePass') ?>" style="float: right; margin: 3px 5px;">修改密码</a>
             <button class="but"  lay-submit  lay-filter="sub" type="button">登录</button>
         </form>
     </div>
@@ -50,28 +51,18 @@ include($this->view_path('public/footer'));
                     result = JSON.parse(result)
                     console.log(result);
                     if (result['code']==1){
-                            close_loading();
-                            window.location="<?php echo url('?#home.index') ?>"
-                        }else {
-                            close_loading();
-                            layer.msg(result.tip);
+                        close_loading();
+                        window.location="<?php echo url('?#home.index') ?>"
+                    }else {
+                        close_loading();
+                        layer.msg(result.tip);
 
-                        }
                     }
+                }
             })
 
         });
     });
 
-    var loading = function () {
-        index = layer.load(1, {
-            shade: [0.5, '#111'], //0.1透明度的白色背景
-        });
-
-    }
-
-    var close_loading =function () {
-        layer.close(index);
-    }
 </script>
 </html>

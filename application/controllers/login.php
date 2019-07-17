@@ -62,7 +62,8 @@ class Login extends MpController{
 
             $C = new Conf('./config');
             $C->set('PASS', $hash)->save();
-            $this->doOut();
+            session_unset();
+            return $this->ajax_echo(1, '修改成功', 'error');
         }else{
             return $this->ajax_echo(0, 'password error', 'error');
         }

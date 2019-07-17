@@ -71,6 +71,9 @@ include($this->view_path('public/header_end'));
             <li style="color: red;">windows暂不支持预览功能</li>
 
         <?php } ?>
+        <li>
+            <button class="button"><a href="<?php echo url("hexoer.deploy"); ?>">发布网站</a></button>
+        </li>
     </ul>
     <h3 class="left-text" style="font-weight:400">
         # HEXO信息

@@ -14,11 +14,7 @@ include($this->view_path('public/header_start'));
 <script language="JavaScript" type="text/javascript" src="http://lib.sinaapp.com/js/jquery/1.7/jquery.min.js"></script>
 <link rel="stylesheet" href="assets/css/heart.css">
 
-<style>
-    .left-text-2 {
-        text-align: left;
-    }
-</style>
+
 <?php
 include($this->view_path('public/header_end'));
 ?>
